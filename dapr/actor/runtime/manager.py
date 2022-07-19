@@ -47,9 +47,10 @@ class ActorManager:
 
     async def activate_actor(self, actor_id: ActorId):
         """Activates actor."""
+        actor = self._runtime_ctx.create_actor(actor_id)
+        await actor._on_activate_internal()
+
         async with self._active_actors_lock:
-            actor = self._runtime_ctx.create_actor(actor_id)
-            await actor._on_activate_internal()
             self._active_actors[actor_id.id] = actor
 
     async def deactivate_actor(self, actor_id: ActorId):
@@ -115,10 +116,10 @@ class ActorManager:
             self, actor_id: ActorId, method_context: ActorMethodContext,
             dispatch_action: Callable[[Actor], Coroutine[Any, Any, Optional[bytes]]]) -> object:
         # Activate actor when actor is invoked.
-        if actor_id.id not in self._active_actors:
-            await self.activate_actor(actor_id)
         actor = None
         async with self._active_actors_lock:
+            if actor_id.id not in self._active_actors:
+                await self.activate_actor(actor_id)
             actor = self._active_actors.get(actor_id.id, None)
         if not actor:
             raise ValueError(f'{actor_id} is not activated')
