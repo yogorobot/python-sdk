@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "dapr"
+version = "1.7.1.dev2"
+description = ""
+authors = ["YOGO Robot"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiohttp = "^3.6.2"
+python-dateutil = "^2.8.1"
+grpcio = "^1.26.0"
+grpcio-tools = "^1.26.0"
+protobuf = "^3.20.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
