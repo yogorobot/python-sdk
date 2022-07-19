@@ -47,9 +47,8 @@ class ActorManager:
 
     async def activate_actor(self, actor_id: ActorId):
         """Activates actor."""
-        actor = self._runtime_ctx.create_actor(actor_id)
-
         async with self._active_actors_lock:
+            actor = self._runtime_ctx.create_actor(actor_id)
             await actor._on_activate_internal()
             self._active_actors[actor_id.id] = actor
 
